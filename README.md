@@ -1,19 +1,14 @@
 ## concerthall optimization framework
 
-This optimization framework is run using the Paperspace Gradient Experiment tool. The following information is the same across 
+This optimization framework is run using the Paperspace Jupyter notebook tool. The following information is the same across 
 scripts provided in this repository:
 
-
-The docker image/container used for this repository is:
-
-`acarlson32/pytorch3dimg:firstimage`
-
-
-The workspace is:
+The codebase we will be using is:
 
 `https://github.com/alexacarlson/concerthall.git`
 
 
+First, you will need to upload the jupyter notebook 
 ### Training the Graph Convolutional Neural network to map 3D meshes --> audio quality parameters
 To train your own graph convolutional network, you first need to create a folder in paperspace storage at `/storage/concert_dataset` upload your data there. All of your meshes should be `.obj` files and should exist in a subdirectory of the dataset: `/storage/concert_dataset/OBJdatabase/`. You will need to have a csv file of acoustic paramters (where each line is in the format `mesh.obj acoust_param1 acoust_param2 ... acoust_param10`) located at and named `/storage/concert_dataset/AcousticParameters.csv`.
 
