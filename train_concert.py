@@ -64,10 +64,7 @@ if __name__ == "__main__":
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
 
-    #device = torch.device("cuda:0")
-    #device = torch.device("cuda")
-    device_id = torch.cuda.device_count()
-    device = torch.cuda.get_device_name(range(device_id))
+    device = torch.device("cuda:0")
     _C.DEVICE = device
     
     # --------------------------------------------------------------------------------------------
