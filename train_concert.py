@@ -64,7 +64,8 @@ if __name__ == "__main__":
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
 
-    device = torch.device("cuda:0")
+    #device = torch.device("cuda:0")
+    device = torch.device("cuda")
     _C.DEVICE = device
     
     # --------------------------------------------------------------------------------------------
