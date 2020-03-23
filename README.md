@@ -9,7 +9,7 @@ The docker image/container used for this repository is:
 
 
 The workspace is:
-`https://github.com/alexacarlson/concerthall`
+`https://github.com/alexacarlson/concerthall.git`
 
 
 ### Training the Graph Convolutional Neural network to map 3D meshes --> audio quality parameters
