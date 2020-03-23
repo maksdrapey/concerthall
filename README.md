@@ -14,6 +14,12 @@ The workspace is:
 
 ### Training the Graph Convolutional Neural network to map 3D meshes --> audio quality parameters
 
+Command format:
+`run_train_graphconv_regression.sh`
+
+Example Command:
+`run_train_graphconv_regression.sh`
+
 
 ### Running the Acoustic quality optimization using the trained graph convolutional network
 
