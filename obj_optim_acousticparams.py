@@ -185,6 +185,7 @@ if __name__ == "__main__":
     parser.add_argument('-ab1', '--adam_beta1', type=float, default=0.9)
     parser.add_argument('-bs', '--batch_size', type=int, default=4)
     parser.add_argument('-silimgref', '--silhouette_img_ref', type=str, default=None)
+    parser.add_argument('-gnet', '--trained_graphnet_weights', type=str, default='/storage/mesh2acoustic_training_results/exp_03_10_11_57_39_c')
     parser.add_argument('-wm', '--which_starting_mesh', type=str, default='sphere')
     parser.add_argument('-wp', '--which_acoustic_params', type=str, default=None)
     parser.add_argument('-lap', '--mesh_laplacian_smoothing', type=lambda x:bool(util.strtobool(x)), default=True)
@@ -202,11 +203,11 @@ if __name__ == "__main__":
     #
     ## make the output directory if necessary 
     if args_.mesh_multisilhouette_optim and args_.mesh_acousticparam_optim:
-        output_dir = '_'.join(['/root/results_acousticoptim', str(args_.which_acoustic_params), 'multicamVertoptim', os.path.splitext(os.path.split(args_.silhouette_img_ref)[1])[0]])
+        output_dir = '_'.join(['/storage/results_acousticoptim', str(args_.which_acoustic_params), 'multicamVertoptim', os.path.splitext(os.path.split(args_.silhouette_img_ref)[1])[0]])
     elif args_.mesh_acousticparam_optim:
-        output_dir = '_'.join(['/root/results_acousticoptim', str(args_.which_acoustic_params)])
+        output_dir = '_'.join(['/storage/results_acousticoptim', str(args_.which_acoustic_params)])
     elif args_.mesh_multisilhouette_optim:
-        output_dir = '_'.join(['/root/results_multicamVertoptim', os.path.splitext(os.path.split(args_.silhouette_img_ref)[1])[0]])
+        output_dir = '_'.join(['/storage/results_multicamVertoptim', os.path.splitext(os.path.split(args_.silhouette_img_ref)[1])[0]])
     else:
         print('need some optimization criterion, specify mesh_acousticparam_optim, mesh_multisilhouette_optim, or both')
     print('Saving optim results to %s'%(output_dir))
@@ -272,7 +273,7 @@ if __name__ == "__main__":
     ## ---- SET UP/load in trained graph convolutional NN classification model ---- ##
     if args_.mesh_acousticparam_optim:
         #graphconv_model_path = '/root/graphconvnet_classification_results/model/exp_02_17_02_06_41_overfit'
-        graphconv_model_path = '/root/graphconvnet_acousticparampred_results/exp_03_10_11_57_39_concerthalloptim'
+        graphconv_model_path = args_.trained_graphnet_weights #'/storage/graphconvnet_acousticparampred_results/exp_03_10_11_57_39_concerthalloptim'
         idx_best_loss=99
         cfg = Config(args_.config_path)
         desired_acoustic_params = torch.tensor([float(ap) for ap in args_.which_acoustic_params.split(',')], dtype=torch.float32, device=device)
