@@ -7,15 +7,17 @@
 #CFG_PATH='/config/mesh2audioparams_train.yml'
 
 MESH=$1
-SIL_DEFORM_FLAG=$2
-SIL_REF=$3
-ACOUST_DEFORM_FLAG=$4
-WHICH_ACOUST_PARAMS=$5
-OUT_NAME=$6
+TRAINED_GRAPH=$2
+SIL_DEFORM_FLAG=$3
+SIL_REF=$4
+ACOUST_DEFORM_FLAG=$5
+WHICH_ACOUST_PARAMS=$6
+OUT_NAME=$7
 CFG_PATH='/config/mesh2audioparams_train.yml'
 
 python obj_optim_acousticparams.py \
   --which_starting_mesh ${MESH} \
+  --trained_graphnet_weights ${TRAINED_GRAPH} \
   --mesh_multisilhouette_optim ${SIL_DEFORM_FLAG} \
   --mesh_acousticparam_optim ${ACOUST_DEFORM_FLAG} \
   --silhouette_img_ref ${SIL_REF} \
