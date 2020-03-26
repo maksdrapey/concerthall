@@ -13,7 +13,7 @@ SIL_REF=$4
 ACOUST_DEFORM_FLAG=$5
 WHICH_ACOUST_PARAMS=$6
 OUT_NAME=$7
-CFG_PATH='/config/mesh2audioparams_train.yml'
+CFG_PATH='config/mesh2audioparams_train.yml'
 
 python obj_optim_acousticparams.py \
   --which_starting_mesh ${MESH} \
