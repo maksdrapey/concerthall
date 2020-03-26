@@ -352,4 +352,4 @@ if __name__ == "__main__":
     ## Fetch the verts and faces of the final predicted mesh
     final_verts, final_faces = new_src_mesh.get_mesh_verts_faces(0)    
     ## save output mesh
-    save_obj(os.path.splitext(args_.output_filename)[0], final_verts, final_faces)
+    save_obj(os.path.join(output_dir, args_.output_filename), final_verts, final_faces)
