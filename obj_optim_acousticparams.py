@@ -301,12 +301,13 @@ if __name__ == "__main__":
                 print('nan values in deform verts:', torch.sum(torch.isnan(deform_verts)).item())
                 #
             ## plot point cloud render of deformed mesh
-            gif_pointcloud(new_src_mesh, title=os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"iter_%d" % iter_))
+            ofname=os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"iter_%d" % iter_)
+            gif_pointcloud(new_src_mesh, title=ofname, os.path.join(output_dir, ofname+'.gif'))
             #plot_pointcloud(new_src_mesh, title=args_.filename_output+"iter_%d" % iter_)
             #
             ## if using a silhoutte loss, view silhouettes from each camera
             if args_.mesh_multisilhouette_optim:
-                sublot_intermediate_renders(silhouette_ref, sil_images, os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"iter_%d.png" % iter_))
+                sublot_intermediate_renders(silhouette_ref, sil_images, os.path.join(output_dir, ofname+".png"))
                 #
             print('Iteration: '+str(iter_) + ' Loss: '+str(loss.cpu().detach().numpy()))
             #
@@ -315,7 +316,8 @@ if __name__ == "__main__":
         optimizer.step()
         ##
     ## final obj shape
-    gif_pointcloud(new_src_mesh, title=os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"iter_%d" % iter_))
+    ofname=os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"_final")
+    gif_pointcloud(new_src_mesh, title=os.path.join(output_dir, ofname+".gif"))
     ## Fetch the verts and faces of the final predicted mesh
     final_verts, final_faces = new_src_mesh.get_mesh_verts_faces(0)    
     ## save output mesh
