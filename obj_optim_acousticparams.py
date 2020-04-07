@@ -140,10 +140,12 @@ if __name__ == "__main__":
     parser.add_argument('-alr', '--adam_lr', type=float, default=0.01)
     parser.add_argument('-ab1', '--adam_beta1', type=float, default=0.9)
     parser.add_argument('-bs', '--batch_size', type=int, default=4)
-    parser.add_argument('-silimgref', '--silhouette_img_ref', type=str, default=None)
+    parser.add_argument('-sif', '--silhouette_img_ref', type=str, default=None)
     parser.add_argument('-gnet', '--trained_graphnet_weights', type=str, default='/storage/mesh2acoustic_training_results/exp_03_10_11_57_39_c')
     parser.add_argument('-wm', '--which_starting_mesh', type=str, default='sphere')
     parser.add_argument('-wp', '--which_acoustic_params', type=str, default=None)
+    parser.add_argument('-maw', '--mesh_acousticparam_optim_weight', type=float, default=1.)
+    parser.add_argument('-msw', '--mesh_multisilhouette_optim_weight', type=float, default=1.)
     parser.add_argument('-cpf', '--camera_positions_file', type=str, default=None)
     parser.add_argument('-lap', '--mesh_laplacian_smoothing', type=lambda x:bool(util.strtobool(x)), default=True)
     parser.add_argument('-ap', '--mesh_acousticparam_optim', type=lambda x:bool(util.strtobool(x)), default=True)
@@ -281,11 +283,11 @@ if __name__ == "__main__":
         ## Calculate loss on deformed mesh
         if args_.mesh_acousticparam_optim:
             loss_acoustic = acousticparam_loss(new_src_mesh, acousticoptim_net_model, desired_acoustic_params)
-            loss+=loss_acoustic
+            loss+=mesh_acousticparam_optim_weight*loss_acoustic
 
         if args_.mesh_multisilhouette_optim:
             loss_sil, sil_images = mesh_multisilhouette_optim(new_src_mesh, camera_poses, silhouette_ref, silhouette_renderer, device)
-            loss+=loss_sil
+            loss+=mesh_multisilhouette_optim_weight*loss_sil
 
         if args_.mesh_laplacian_smoothing: 
             ## add mesh laplacian smoothing
