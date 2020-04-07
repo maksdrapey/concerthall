@@ -241,12 +241,12 @@ if __name__ == "__main__":
     if args_.mesh_acousticparam_optim:
         #graphconv_model_path = '/root/graphconvnet_classification_results/model/exp_02_17_02_06_41_overfit'
         graphconv_model_path = args_.trained_graphnet_weights #'/storage/graphconvnet_acousticparampred_results/exp_03_10_11_57_39_concerthalloptim'
-        idx_best_loss=99
         cfg = Config(args_.config_path)
         desired_acoustic_params = torch.tensor([float(ap) for ap in args_.which_acoustic_params.split(',')], dtype=torch.float32, device=device)
         ## ---- SET UP model and optimizer ---- ##
         acousticoptim_net_model = GraphConvClf(cfg).cuda()
-        acousticoptim_net_model.load_state_dict(torch.load(graphconv_model_path+'/model@epoch'+str(idx_best_loss)+'.pkl', map_location=torch.device('cpu'))['state_dict'])
+        #acousticoptim_net_model.load_state_dict(torch.load(graphconv_model_path+'/model@epoch'+str(idx_best_loss)+'.pkl', map_location=torch.device('cpu'))['state_dict'])
+        acousticoptim_net_model.load_state_dict(torch.load(graphconv_model_path, map_location=torch.device('cpu'))['state_dict'])
         ## freeze the parameters for the classification model
         for pp in acousticoptim_net_model.parameters():
             pp.requires_grad=False
