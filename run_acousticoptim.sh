@@ -16,7 +16,7 @@ ACOUST_DEFORM_FLAG=$7
 ACOUST_DEFORM_WEIGHT=$8
 WHICH_ACOUST_PARAMS=$9
 OUT_NAME=$10
-CFG_PATH='/storage/concerthall/config/mesh2audioparams_train.yml'
+CFG_PATH=$11
 
 python obj_optim_acousticparams.py \
   --which_starting_mesh ${MESH} \
