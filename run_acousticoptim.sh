@@ -10,9 +10,10 @@ MESH=$1
 TRAINED_GRAPH=$2
 SIL_DEFORM_FLAG=$3
 SIL_REF=$4
-ACOUST_DEFORM_FLAG=$5
-WHICH_ACOUST_PARAMS=$6
-OUT_NAME=$7
+CAMPOSITION_FILE=$5
+ACOUST_DEFORM_FLAG=$6
+WHICH_ACOUST_PARAMS=$7
+OUT_NAME=$8
 CFG_PATH='/storage/concerthall/config/mesh2audioparams_train.yml'
 
 python obj_optim_acousticparams.py \
@@ -20,6 +21,7 @@ python obj_optim_acousticparams.py \
   --trained_graphnet_weights ${TRAINED_GRAPH} \
   --mesh_multisilhouette_optim ${SIL_DEFORM_FLAG} \
   --mesh_acousticparam_optim ${ACOUST_DEFORM_FLAG} \
+  --camera_positions_file ${CAMPOSITION_FILE} \
   --silhouette_img_ref ${SIL_REF} \
   --which_acoustic_params ${WHICH_ACOUST_PARAMS} \
   --output_filename ${OUT_NAME} \
