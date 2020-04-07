@@ -15,8 +15,8 @@ CAMPOSITION_FILE=$6
 ACOUST_DEFORM_FLAG=$7
 ACOUST_DEFORM_WEIGHT=$8
 WHICH_ACOUST_PARAMS=$9
-OUT_NAME=$10
-CFG_PATH=$11
+OUT_NAME=${10}
+CFG_PATH=${11}
 
 python obj_optim_acousticparams.py \
   --which_starting_mesh ${MESH} \
