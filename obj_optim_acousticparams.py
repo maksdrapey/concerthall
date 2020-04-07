@@ -47,55 +47,11 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-
-#def deep_dream_loss(input_mesh, classification_model, layer_name='fc2', node=None):
-#        # compute loss
-#        #nnfeatures =  classification_model.get_forward_fcfeats(input_mesh, layer_name)
-#        nnfeatures =  classification_model.get_forward_feats(input_mesh, layer_name)
-#        nnfeatures=torch.squeeze(nnfeatures)
-#        if 'fc' in layer_name:
-#            loss = -torch.sum(nnfeatures[node]**2)/nnfeatures[node].numel()
-#        elif 'gconv' in layer_name:
-#            vert = node[0]
-#            feati = node[1]
-#            loss = -torch.sum(nnfeatures[vert, feati]**2)/nnfeatures[vert, feati].numel()
-#        #loss = -torch.sum(nnfeatures[:,node]**2)/nnfeatures[:,node].numel()
-#        #var_line_length = get_var_line_length_loss(self.mesh.vertices, self.mesh.faces)
-#        #loss += self.lambda_length * var_line_length
-#        return loss
-
-class CameraModel(nn.Module):
-    def __init__(self, meshes, renderer, image_ref):
-        super().__init__()
-        self.meshes = meshes
-        self.device = meshes.device
-        self.renderer = renderer
-        
-        # Get the silhouette of the reference RGB image by finding all the non zero values. 
-        image_ref = torch.from_numpy((image_ref[..., :3].max(-1) != 0).astype(np.float32))
-        self.register_buffer('image_ref', image_ref)
-        
-        # Create an optimizable parameter for the x, y, z position of the camera. 
-        self.camera_position = nn.Parameter(
-            torch.from_numpy(np.array([3.0,  6.9, +2.5], dtype=np.float32)).to(meshes.device))
-
-    def forward(self):
-        # Render the image using the updated camera position. Based on the new position of the 
-        # camer we calculate the rotation and translation matrices
-        R = look_at_rotation(self.camera_position[None, :], device=self.device)  # (1, 3, 3)
-        T = -torch.bmm(R.transpose(1, 2), self.camera_position[None, :, None])[:, :, 0]   # (1, 3)
-        
-        image = self.renderer(meshes_world=self.meshes.clone(), R=R, T=T)
-        
-        # Calculate the silhouette loss
-        loss = torch.sum((image[..., 3] - self.image_ref) ** 2)
-        return loss, image
-
-def mesh_multisilhouette_optim(input_mesh, silhouette_img_ref, silhouette_renderer, device):
+def mesh_multisilhouette_optim(input_mesh, camera_poses, silhouette_img_ref, silhouette_renderer, device):
     ## we want to render an image base loss (think like neural renderer vertex optim) but have it be from aorund the entire object
-    dist_=15.
-    el_ = 0.
-    camera_poses = [[dist_, el_, 0.],[dist_, el_, 90.],[dist_, el_, 180.],[dist_, el_, 270.]]
+    #dist_=15.
+    #el_ = 0.
+    #camera_poses = [[dist_, el_, 0.],[dist_, el_, 90.],[dist_, el_, 180.],[dist_, el_, 270.]]
     loss=0
     silhouette_img_list=[]
     for dist, el, az in camera_poses:
@@ -188,6 +144,7 @@ if __name__ == "__main__":
     parser.add_argument('-gnet', '--trained_graphnet_weights', type=str, default='/storage/mesh2acoustic_training_results/exp_03_10_11_57_39_c')
     parser.add_argument('-wm', '--which_starting_mesh', type=str, default='sphere')
     parser.add_argument('-wp', '--which_acoustic_params', type=str, default=None)
+    parser.add_argument('-cpf', '--camera_positions_file', type=str, default=None)
     parser.add_argument('-lap', '--mesh_laplacian_smoothing', type=lambda x:bool(util.strtobool(x)), default=True)
     parser.add_argument('-ap', '--mesh_acousticparam_optim', type=lambda x:bool(util.strtobool(x)), default=True)
     parser.add_argument('-so', '--mesh_multisilhouette_optim', type=lambda x:bool(util.strtobool(x)), default=True)
@@ -238,6 +195,16 @@ if __name__ == "__main__":
         silhouette_ref = cv2.resize(silhouette_ref, (256, 256))
         silhouette_ref = torch.from_numpy((silhouette_ref[..., :3].max(-1) != 0).astype(np.float32)).to(device)
         #silhouette_ref = torch.tensor([silhouette_ref], dtype=torch.float32, device=device)
+        #
+        # Process camera positions
+        if args_.camera_positions_file:
+            with open(args_.camera_positions_file,'r') as ff:
+                camera_lines = [x.strip() for x in ff.readlines()]
+            camera_poses=[[float(cl.split(' '))[0], float(cl.split(' '))[1], float(cl.split(' ')[2])] for cl in camera_lines]
+        else:
+            dist_=15.
+            el_=0.
+            camera_poses=[[dist_, el_, 0.],[dist_, el_, 90.],[dist_, el_, 180.],[dist_, el_, 270.]]
         # Initialize an OpenGL perspective camera.
         cameras = OpenGLPerspectiveCameras(device=device)
         # To blend the 100 faces we set a few parameters which control the opacity and the sharpness of 
@@ -317,7 +284,7 @@ if __name__ == "__main__":
             loss+=loss_acoustic
 
         if args_.mesh_multisilhouette_optim:
-            loss_sil, sil_images = mesh_multisilhouette_optim(new_src_mesh, silhouette_ref, silhouette_renderer, device)
+            loss_sil, sil_images = mesh_multisilhouette_optim(new_src_mesh, camera_poses, silhouette_ref, silhouette_renderer, device)
             loss+=loss_sil
 
         if args_.mesh_laplacian_smoothing: 
