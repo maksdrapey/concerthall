@@ -96,7 +96,7 @@ def plot_pointcloud(mesh, title=""):
     plt.savefig(title+'.png')
     #plt.show()
 
-def gif_pointcloud(mesh, title=""):
+def gif_pointcloud(mesh, filename, title=""):
     # Sample points uniformly from the surface of the mesh.
     points = sample_points_from_meshes(mesh, 5000)
     x, y, z = points.clone().detach().cpu().squeeze().unbind(1)    
@@ -113,7 +113,7 @@ def gif_pointcloud(mesh, title=""):
     # Set up formatting for the movie files
     #writer1 = matplotlib.animation.FFMpegFileWriter(fps=15, metadata=dict(artist='Me'), bitrate=1800) #matplotlib.animation.writers['ffmpeg']
     #writer1 = Writer1(fps=15, metadata=dict(artist='Me'), bitrate=1800)
-    anim.save(title+'.gif', dpi=80, writer = matplotlib.animation.PillowWriter())
+    anim.save(filename, dpi=80, writer = matplotlib.animation.PillowWriter())
     #anim.save(title+'.gif', dpi=80, writer='imagemagick')
     #ax.view_init(190, 30)
     #plt.savefig(title+'.png')
@@ -304,7 +304,7 @@ if __name__ == "__main__":
                 #
             ## plot point cloud render of deformed mesh
             ofname=os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"iter_%d" % iter_)
-            gif_pointcloud(new_src_mesh, title=ofname, os.path.join(output_dir, ofname+'.gif'))
+            gif_pointcloud(new_src_mesh, os.path.join(output_dir, ofname+'.gif'), title=ofname)
             #plot_pointcloud(new_src_mesh, title=args_.filename_output+"iter_%d" % iter_)
             #
             ## if using a silhoutte loss, view silhouettes from each camera
@@ -319,7 +319,7 @@ if __name__ == "__main__":
         ##
     ## final obj shape
     ofname=os.path.join(output_dir, os.path.splitext(args_.output_filename)[0]+"_final")
-    gif_pointcloud(new_src_mesh, title=os.path.join(output_dir, ofname+".gif"))
+    gif_pointcloud(new_src_mesh, os.path.join(output_dir, ofname+".gif"), title=ofname)
     ## Fetch the verts and faces of the final predicted mesh
     final_verts, final_faces = new_src_mesh.get_mesh_verts_faces(0)    
     ## save output mesh
