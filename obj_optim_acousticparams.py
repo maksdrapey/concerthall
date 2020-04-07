@@ -283,11 +283,11 @@ if __name__ == "__main__":
         ## Calculate loss on deformed mesh
         if args_.mesh_acousticparam_optim:
             loss_acoustic = acousticparam_loss(new_src_mesh, acousticoptim_net_model, desired_acoustic_params)
-            loss+=mesh_acousticparam_optim_weight*loss_acoustic
+            loss+=args_.mesh_acousticparam_optim_weight*loss_acoustic
 
         if args_.mesh_multisilhouette_optim:
             loss_sil, sil_images = mesh_multisilhouette_optim(new_src_mesh, camera_poses, silhouette_ref, silhouette_renderer, device)
-            loss+=mesh_multisilhouette_optim_weight*loss_sil
+            loss+=args_.mesh_multisilhouette_optim_weight*loss_sil
 
         if args_.mesh_laplacian_smoothing: 
             ## add mesh laplacian smoothing
