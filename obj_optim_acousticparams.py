@@ -200,7 +200,7 @@ if __name__ == "__main__":
         if args_.camera_positions_file:
             with open(args_.camera_positions_file,'r') as ff:
                 camera_lines = [x.strip() for x in ff.readlines()]
-            camera_poses=[[float(cl.split(' '))[0], float(cl.split(' '))[1], float(cl.split(' ')[2])] for cl in camera_lines]
+            camera_poses=[[float(cl.split(' ')[0]), float(cl.split(' ')[1]), float(cl.split(' ')[2])] for cl in camera_lines]
         else:
             dist_=15.
             el_=0.
