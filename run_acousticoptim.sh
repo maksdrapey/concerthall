@@ -16,7 +16,8 @@ ACOUST_DEFORM_FLAG=$7
 ACOUST_DEFORM_WEIGHT=$8
 WHICH_ACOUST_PARAMS=$9
 OUT_NAME=${10}
-CFG_PATH=${11}
+NUM_ITERS=${11}
+CFG_PATH=${12}
 
 python obj_optim_acousticparams.py \
   --which_starting_mesh ${MESH} \
@@ -29,5 +30,6 @@ python obj_optim_acousticparams.py \
   --silhouette_img_ref ${SIL_REF} \
   --which_acoustic_params ${WHICH_ACOUST_PARAMS} \
   --output_filename ${OUT_NAME} \
+  --num_iteration ${NUM_ITERS} \
   --config_path ${CFG_PATH}
 
